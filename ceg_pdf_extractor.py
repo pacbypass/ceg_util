@@ -1,8 +1,9 @@
 import pdfplumber
 import pandas as pd
 import os
-
-
+import json
+import sys
+from unidecode import unidecode
 
 def extract_tables_with_pdfplumber(pdf_path):
     tables = []
@@ -45,31 +46,32 @@ def extract_tables_with_pdfplumber(pdf_path):
     return tables
 
 # Usage
-for pdf_path in os.listdir():
-    if not pdf_path.endswith(".pdf"):
+
+if len(sys.argv) == 1:
+    sys.exit(-1)
+pdf_path = sys.argv[1]
+
+tables = extract_tables_with_pdfplumber(pdf_path)
+f = open(pdf_path+'.json','w',  encoding="utf-8")
+
+# Display the tables
+for i, table in enumerate(tables):
+    if table["name"] != "Informacje ogólne" and table["name"] != "Interfejsy sieciowe":
         continue
-    tables = extract_tables_with_pdfplumber(pdf_path)
-    f = open('output.txt','w',  encoding="utf-8")
 
-    print(pdf_path, file=f)
-    # sys.stdout = f
-    # Display the tables
-    for i, table in enumerate(tables):
-        if table["name"] != "Informacje ogólne" and table["name"] != "Interfejsy sieciowe":
-            continue
+    # Tabele informacyjne i sieciowe sa inne niz standard, nie maja nazw kolumn
+    table["tables"].append(table["columns"])
+    table["columns"] = None
 
-        # Tabele informacyjne i sieciowe sa inne niz standard, nie maja nazw kolumn
-        table["tables"].append(table["columns"])
-        table["columns"] = None
+    for i, x in enumerate(table["tables"]):
+        if len(x) == 0:
+            continue            
+        x[0] = x[0].replace(":", "")
+    # # if table.contains
+    # print(f"Table {i+1}", file=f)
+    # print(table)
+    # print(table, file=f)
 
-        for i, x in enumerate(table["tables"]):
-            if len(x) == 0:
-                continue            
-            x[0] = x[0].replace(":", "")
-        # # if table.contains
-        print(f"Table {i+1}", file=f)
-        # print(table)
-        print(table, file=f)
-    # print(tables, file=f)
-    
+print(unidecode(json.dumps(tables, indent=2)).replace("\n", ""), file=f)
 
+# print(table)
