@@ -9,11 +9,11 @@ statyczne reguly iptables blokujace wszystko oprocz naszych adresów
 
 ## Requirements
 
-pip install pdfplumber pandas unidecode
+`pip install pdfplumber pandas unidecode`
 
 ## Usage
 
-python3 ceg_pdf_extractor.py CEG23.pdf 
+`python3 ceg_pdf_extractor.py CEG23.pdf`
 
 
 Po odpaleniu skryptu stworzy sie plik CEG23.pdf.json

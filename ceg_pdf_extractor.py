@@ -7,7 +7,6 @@ from unidecode import unidecode
 
 def transform_to_dict(input_list):
     result_dict = {}
-    print(input_list)
     for item in input_list:
         if len(item) == 1:
             key = item[0]
