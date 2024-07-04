@@ -54,6 +54,9 @@ pdf_path = sys.argv[1]
 tables = extract_tables_with_pdfplumber(pdf_path)
 f = open(pdf_path+'.json','w',  encoding="utf-8")
 
+# The tables with network and general information
+tables_finished = []
+
 # Display the tables
 for i, table in enumerate(tables):
     if table["name"] != "Informacje ogólne" and table["name"] != "Interfejsy sieciowe":
@@ -71,7 +74,10 @@ for i, table in enumerate(tables):
     # print(f"Table {i+1}", file=f)
     # print(table)
     # print(table, file=f)
+    tables_finished.push(table)
+    
 
-print(unidecode(json.dumps(tables, indent=2)).replace("\n", ""), file=f)
+
+print(unidecode(json.dumps(tables_finished, indent=2)).replace("\\n", ""), file=f)
 
 # print(table)
