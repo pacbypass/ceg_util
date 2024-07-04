@@ -79,6 +79,7 @@ for i, table in enumerate(tables):
 parsed_hosts = []
 for x in range(0, len(tables_finished), 2):
     merged = {"general": tables_finished[x], "network": tables_finished[x+1]}
+    parsed_hosts.append(merged)
 
 
 print(unidecode(json.dumps(parsed_hosts, indent=2)).replace("\\n", ""), file=f)
