@@ -26,7 +26,7 @@ def extract_tables_with_pdfplumber(pdf_path):
                     # 
                     # W tym przypadku, celowo ignoruję tabelę z listą hostów na górze.
                     # filtered_list = [item for item in table[0] if item is not None]
-                    cleaned_list = [[element for element in sublist if element not in [None, '']] for sublist in table]
+                    cleaned_list = [[unidecode(element) for element in sublist if element not in [None, '']] for sublist in table]
                     if len(cleaned_list[0]) > 1:
                         # mozesz tu wyprintowac filtered_list, w tym miejscu jest jakis problem
                         # z parsowaniem, czesto sie to zdarza na koncowkach stron
@@ -37,7 +37,7 @@ def extract_tables_with_pdfplumber(pdf_path):
                     df = {"name": cleaned_list[0][0], "columns": cleaned_list[1], "tables": cleaned_list[2:]}
                     tables.append(df)
                 except:
-                    cleaned_list = [[element for element in sublist if element not in [None, '']] for sublist in table]
+                    cleaned_list = [[unidecode(element) for element in sublist if element not in [None, '']] for sublist in table]
         
                     # przypadek kiedy tabela sie wrapuje na nastepna strone
                     tables[-1]["tables"] += cleaned_list
@@ -59,7 +59,7 @@ tables_finished = []
 
 # Display the tables
 for i, table in enumerate(tables):
-    if table["name"] != "Informacje ogólne" and table["name"] != "Interfejsy sieciowe":
+    if table["name"] != "Informacje ogolne" and table["name"] != "Interfejsy sieciowe":
         continue
 
     # Tabele informacyjne i sieciowe sa inne niz standard, nie maja nazw kolumn
@@ -76,8 +76,11 @@ for i, table in enumerate(tables):
     # print(table, file=f)
     tables_finished.append(table)
     
+parsed_hosts = []
+for x in range(0, len(tables_finished), 2):
+    merged = {"general": tables_finished[x], "network": tables_finished[x+1]}
 
 
-print(unidecode(json.dumps(tables_finished, indent=2)).replace("\\n", ""), file=f)
+print(unidecode(json.dumps(parsed_hosts, indent=2)).replace("\\n", ""), file=f)
 
 # print(table)
