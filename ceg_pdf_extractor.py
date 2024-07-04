@@ -5,6 +5,26 @@ import json
 import sys
 from unidecode import unidecode
 
+def transform_to_dict(input_list):
+    result_dict = {}
+    print(input_list)
+    for item in input_list:
+        if len(item) == 1:
+            key = item[0]
+            value = None
+        else:
+            key, value = item
+        
+        if key in result_dict:
+            # If the key already exists and is not a list, convert it to a list
+            if not isinstance(result_dict[key], list):
+                result_dict[key] = [result_dict[key]]
+            # Append the new value to the list
+            result_dict[key].append(value)
+        else:
+            result_dict[key] = value
+    return result_dict
+
 def extract_tables_with_pdfplumber(pdf_path):
     tables = []
     with pdfplumber.open(pdf_path) as pdf:
@@ -78,6 +98,12 @@ for i, table in enumerate(tables):
     
 parsed_hosts = []
 for x in range(0, len(tables_finished), 2):
+    general_dict = transform_to_dict(tables_finished[x]["tables"])
+    network_dict = transform_to_dict(tables_finished[x+1]["tables"])
+
+    tables_finished[x]["tables"] = general_dict
+    tables_finished[x+1]["tables"] = network_dict
+
     merged = {"general": tables_finished[x], "network": tables_finished[x+1]}
     parsed_hosts.append(merged)
 
