@@ -74,7 +74,7 @@ for i, table in enumerate(tables):
     # print(f"Table {i+1}", file=f)
     # print(table)
     # print(table, file=f)
-    tables_finished.push(table)
+    tables_finished.append(table)
     
 
 
