@@ -103,6 +103,7 @@ for x in range(0, len(tables_finished), 2):
 
     tables_finished[x]["tables"] = general_dict
     tables_finished[x+1]["tables"] = network_dict
+    tables_finished[x]["name"] = general_dict["FQDN"]
 
     merged = {"general": tables_finished[x], "network": tables_finished[x+1]}
     parsed_hosts.append(merged)
